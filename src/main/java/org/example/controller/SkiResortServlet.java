@@ -27,6 +27,7 @@ public class SkiResortServlet extends HttpServlet {
 	
 	//Concurrent Hashmap 
 	ConcurrentHashMap<String,Skier> skierDB = new ConcurrentHashMap<>();
+
 	
 	@Override
 	 public void init() throws ServletException {
@@ -72,14 +73,52 @@ public class SkiResortServlet extends HttpServlet {
 	@Override
 	protected void doPost (HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException
 	{
+		//***** GET PARAMETERS *****
 		String resortIDString = request.getParameter("resortID");
-		int resortID = Integer.parseInt(resortIDString);
+		
 		
 		String seasonID = request.getParameter("seasonID");
 		String dayID = request.getParameter("dayID");
 		
 		String skierIDString = request.getParameter("skierID");
-		int skierID = Integer.parseInt(skierIDString);
+		
+		
+		//***** PARAMETER VALIDATION *****
+		
+		//Null or Empty Parameter
+		if(resortIDString == null || resortIDString.isEmpty() ||
+			seasonID == null || seasonID.isEmpty() ||
+			dayID == null || dayID.isEmpty() ||
+			skierIDString == null || skierIDString.isEmpty())
+		{
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Missing Parameters");
+			return;
+		}
+		
+		//Validation resortID since resortID is an integer in Swagger API definition
+		int resortID;
+		try {
+			resortID = Integer.parseInt(resortIDString);
+		}
+		catch (NumberFormatException e)
+		{
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Invalid resortID");
+			return;
+		}
+		
+		//Validation resortID since resortID is an integer in Swagger API definition
+		int skierID;
+		try {
+			skierID = Integer.parseInt(skierIDString);
+		}
+		catch (NumberFormatException e)
+		{
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Invalid skierID");
+			return;
+		}
 		
 		Skier skier_object = new Skier();
 		skier_object.setResortID(resortID);
