@@ -99,6 +99,10 @@ public class SkiResortServlet extends HttpServlet {
 		{
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Missing Parameters");
+			response.getWriter().println(resortID);
+			response.getWriter().println(seasonID);
+			response.getWriter().println(dayID);
+			response.getWriter().println(skierID);
 			return;
 		}
 		
