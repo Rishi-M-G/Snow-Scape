@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -74,22 +75,27 @@ public class SkiResortServlet extends HttpServlet {
 	protected void doPost (HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException
 	{
 		//***** GET PARAMETERS *****
-		String resortIDString = request.getParameter("resortID");
+		BufferedReader reader = request.getReader();
+		Gson gson = new Gson();
+		Skier skier_object = gson.fromJson(reader, Skier.class);
 		
 		
-		String seasonID = request.getParameter("seasonID");
-		String dayID = request.getParameter("dayID");
+		int resortID = skier_object.getResortID();
 		
-		String skierIDString = request.getParameter("skierID");
+		
+		String seasonID = skier_object.getSeasonID();
+		String dayID = skier_object.getDayID();
+		
+		int skierID = skier_object.getSkierID();
 		
 		
 		//***** PARAMETER VALIDATION *****
 		
 		//Null or Empty Parameter
-		if(resortIDString == null || resortIDString.isEmpty() ||
+		if(
 			seasonID == null || seasonID.isEmpty() ||
-			dayID == null || dayID.isEmpty() ||
-			skierIDString == null || skierIDString.isEmpty())
+			dayID == null || dayID.isEmpty() 
+			)
 		{
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Missing Parameters");
@@ -97,37 +103,39 @@ public class SkiResortServlet extends HttpServlet {
 		}
 		
 		//Validation resortID since resortID is an integer in Swagger API definition
-		int resortID;
-		try {
-			resortID = Integer.parseInt(resortIDString);
-		}
-		catch (NumberFormatException e)
-		{
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Invalid resortID");
-			return;
-		}
+//		int resortID;
+//		try {
+//			resortID = Integer.parseInt(resortIDString);
+//		}
+//		catch (NumberFormatException e)
+//		{
+//			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//			response.getWriter().println("Invalid resortID");
+//			return;
+//		}
+//		
+//		//Validation resortID since resortID is an integer in Swagger API definition
+//		int skierID;
+//		try {
+//			skierID = Integer.parseInt(skierIDString);
+//		}
+//		catch (NumberFormatException e)
+//		{
+//			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//			response.getWriter().println("Invalid skierID");
+//			return;
+//		}
 		
-		//Validation resortID since resortID is an integer in Swagger API definition
-		int skierID;
-		try {
-			skierID = Integer.parseInt(skierIDString);
-		}
-		catch (NumberFormatException e)
-		{
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Invalid skierID");
-			return;
-		}
-		
-		Skier skier_object = new Skier();
-		skier_object.setResortID(resortID);
-		skier_object.setSeasonID(seasonID);
-		skier_object.setDayID(dayID);
-		skier_object.setSkierID(skierID);
+//		Skier skier_object = new Skier();
+//		skier_object.setResortID(resortID);
+//		skier_object.setSeasonID(seasonID);
+//		skier_object.setDayID(dayID);
+//		skier_object.setSkierID(skierID);
 		
 		skierDB.put(dayID, skier_object);
+		
+		//skierDB.put(dayID, skier_object);
 		response.setStatus(HttpServletResponse.SC_CREATED);
-		response.getOutputStream().println("POST RESPONSE: Skier " + skierIDString + " is added to the database.");
+		response.getOutputStream().println("POST RESPONSE: Skier " + skierID + " is added to the database.");
 	}
 }
