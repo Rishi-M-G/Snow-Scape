@@ -38,7 +38,11 @@ public class SkiResortServlet extends HttpServlet {
 		skier_obj1.setSeasonID("4");
 		skier_obj1.setDayID("20");
 		skier_obj1.setSkierID(1070);
-		skierDB.put("20", skier_obj1);
+		skier_obj1.setLiftID(30);
+		skier_obj1.setTime(350);
+		
+		String SkierIDString = Integer.toString(skier_obj1.getSkierID());
+		skierDB.put(SkierIDString, skier_obj1);
 	}
 	
 	@Override
@@ -51,13 +55,27 @@ public class SkiResortServlet extends HttpServlet {
 //		String dayID = skier_obj.getDayID();
 //		String seasonID = skier_obj.getSeasonID();
 		
-		String dayID = request.getParameter("dayID");
-		Skier skier_obj = skierDB.get(dayID);
+//		String dayID = request.getParameter("dayID");
+//		Skier skier_obj = skierDB.get(dayID);
+//		int resortID = skier_obj.getResortID();
+//		String seasonID = skier_obj.getSeasonID();
+//		int skierID = skier_obj.getSkierID();
+//		int liftID = skier_obj.getLiftID();
+//		int time = skier_obj.getTime();
+		
+		String skierIDString = request.getParameter("skierID");
+		int skierID = Integer.parseInt(skierIDString);
+		Skier skier_obj = skierDB.get(skierID);
 		int resortID = skier_obj.getResortID();
 		String seasonID = skier_obj.getSeasonID();
-		int skierID = skier_obj.getSkierID();
+		int liftID = skier_obj.getLiftID();
+		int time = skier_obj.getTime();
+		String dayID = skier_obj.getDayID();
+		
+		
 		Gson gson = new Gson();
 		JsonElement element = gson.toJsonTree(skierDB);
+		
 		
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
@@ -68,7 +86,10 @@ public class SkiResortServlet extends HttpServlet {
 		out.println("Resort ID: " + gson.toJson(resortID));
 		out.println("Season ID: " + gson.toJson(seasonID));
 		out.println("Day ID : "+ gson.toJson(dayID));
-		out.println("Skier ID: "+ gson.toJson(skierID));
+		out.println("Skier ID : "+ gson.toJson(skierID));
+		out.println("Lift ID : "+gson.toJson(liftID));
+		out.println("Time : "+gson.toJson(time));
+		
 		out.println("GET All Elements"+element.toString());
 		out.flush();
 		
@@ -84,18 +105,31 @@ public class SkiResortServlet extends HttpServlet {
 	    JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
 	    //***** ACCESS KEY AND VALUE *****
-	    String dayID = jsonObject.keySet().iterator().next();
-	    JsonObject skierObject = jsonObject.getAsJsonObject(dayID);
+//	    String dayID = jsonObject.keySet().iterator().next();
+//	    JsonObject skierObject = jsonObject.getAsJsonObject(dayID);
+//	    int resortID = skierObject.get("resortID").getAsInt();
+//	    String seasonID = skierObject.get("seasonID").getAsString();
+//	    int skierID = skierObject.get("skierID").getAsInt();
+//	    int liftID = skierObject.get("liftID").getAsInt();
+//	    int time = skierObject.get("time").getAsInt();
+	    
+	    String skierIDString  = jsonObject.keySet().iterator().next();
+	    int skierID = Integer.parseInt(skierIDString);
+	    JsonObject skierObject = jsonObject.getAsJsonObject(skierIDString); //  Watch this line
 	    int resortID = skierObject.get("resortID").getAsInt();
 	    String seasonID = skierObject.get("seasonID").getAsString();
-	    int skierID = skierObject.get("skierID").getAsInt();
+	    int liftID = skierObject.get("liftID").getAsInt();
+	    int time = skierObject.get("time").getAsInt();
+	    String dayID = skierObject.get("dayId").getAsString();
 	    
 	    Skier skier = new Skier();
 	    skier.setResortID(resortID);
 	    skier.setSeasonID(seasonID);
 	    skier.setDayID(dayID);
 	    skier.setSkierID(skierID);
-	    skierDB.put(dayID, skier);
+	    skier.setLiftID(liftID);
+	    skier.setTime(time);
+	    skierDB.put(skierIDString, skier); // line changed 
 
 	    //***** SEND RESPONSE *****
 	    response.setStatus(HttpServletResponse.SC_CREATED);
