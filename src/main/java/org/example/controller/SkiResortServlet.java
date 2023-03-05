@@ -133,7 +133,7 @@ public class SkiResortServlet extends HttpServlet {
 
 	    //***** SEND RESPONSE *****
 	    response.setStatus(HttpServletResponse.SC_CREATED);
-	    response.getOutputStream().println("POST RESPONSE: Skier " + skier.getSkierID() + " is added to the database.");
+	    response.getOutputStream().println("POST RESPONSE: Skier " + skierIDString + " is added to the database.");
 		
 //		int resortID = skier_object.getResortID();
 //		
