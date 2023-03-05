@@ -41,8 +41,7 @@ public class SkiResortServlet extends HttpServlet {
 		skier_obj1.setLiftID(30);
 		skier_obj1.setTime(350);
 		
-		String SkierIDString = Integer.toString(skier_obj1.getSkierID());
-		skierDB.put(SkierIDString, skier_obj1);
+		skierDB.put("1070", skier_obj1);
 	}
 	
 	@Override
