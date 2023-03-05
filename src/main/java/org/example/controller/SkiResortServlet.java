@@ -64,7 +64,7 @@ public class SkiResortServlet extends HttpServlet {
 		
 		String skierIDString = request.getParameter("skierID");
 		int skierID = Integer.parseInt(skierIDString);
-		Skier skier_obj = skierDB.get(skierID);
+		Skier skier_obj = skierDB.get(skierIDString);
 		int resortID = skier_obj.getResortID();
 		String seasonID = skier_obj.getSeasonID();
 		int liftID = skier_obj.getLiftID();
