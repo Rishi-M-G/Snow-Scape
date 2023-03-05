@@ -120,7 +120,7 @@ public class SkiResortServlet extends HttpServlet {
 	    String seasonID = skierObject.get("seasonID").getAsString();
 	    int liftID = skierObject.get("liftID").getAsInt();
 	    int time = skierObject.get("time").getAsInt();
-	    String dayID = skierObject.get("dayId").getAsString();
+	    String dayID = skierObject.get("dayID").getAsString();
 	    
 	    Skier skier = new Skier();
 	    skier.setResortID(resortID);
