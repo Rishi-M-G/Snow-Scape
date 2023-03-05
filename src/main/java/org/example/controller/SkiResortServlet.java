@@ -75,9 +75,23 @@ public class SkiResortServlet extends HttpServlet {
 	protected void doPost (HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException
 	{
 		//***** GET PARAMETERS *****
-		BufferedReader reader = request.getReader();
+		StringBuilder buffer = new StringBuilder();
+	    BufferedReader reader = request.getReader();
+	    String line;
+	    while ((line = reader.readLine()) != null) {
+	        buffer.append(line);
+	        buffer.append(System.lineSeparator());
+	    }
+	    String data = buffer.toString();
+	    System.out.println(data);
+		
+		//BufferedReader reader = request.getReader();
 		Gson gson = new Gson();
 		Skier skier_object = gson.fromJson(reader, Skier.class);
+		
+		StringBuilder jsonBuff = new StringBuilder();
+	//	String line = null;
+		
 		
 		
 		int resortID = skier_object.getResortID();
