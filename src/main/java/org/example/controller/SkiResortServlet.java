@@ -128,7 +128,7 @@ public class SkiResortServlet extends HttpServlet {
 	    skier.setSkierID(skierID);
 	    skier.setLiftID(liftID);
 	    skier.setTime(time);
-	    skierDB.put(skierIDString, skier); // line changed 
+	    //skierDB.put(skierIDString, skier); // line changed 
 
 	    //***** SEND RESPONSE *****
 	    response.setStatus(HttpServletResponse.SC_CREATED);
