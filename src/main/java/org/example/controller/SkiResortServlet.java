@@ -47,20 +47,6 @@ public class SkiResortServlet extends HttpServlet {
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-//		String skierIDString = request.getParameter("skierID");
-//		int skierID = Integer.parseInt(skierIDString);
-//		Skier skier_obj = skierDB.get(skierID);
-//		int resortID = skier_obj.getResortID();
-//		String dayID = skier_obj.getDayID();
-//		String seasonID = skier_obj.getSeasonID();
-		
-//		String dayID = request.getParameter("dayID");
-//		Skier skier_obj = skierDB.get(dayID);
-//		int resortID = skier_obj.getResortID();
-//		String seasonID = skier_obj.getSeasonID();
-//		int skierID = skier_obj.getSkierID();
-//		int liftID = skier_obj.getLiftID();
-//		int time = skier_obj.getTime();
 		
 		String skierIDString = request.getParameter("skierID");
 		int skierID = Integer.parseInt(skierIDString);
@@ -101,25 +87,45 @@ public class SkiResortServlet extends HttpServlet {
 		//***** READ REQUEST BODY *****
 	    BufferedReader reader = request.getReader();
 	    Gson gson = new Gson();
-	    JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-
-	    //***** ACCESS KEY AND VALUE *****
-//	    String dayID = jsonObject.keySet().iterator().next();
-//	    JsonObject skierObject = jsonObject.getAsJsonObject(dayID);
-//	    int resortID = skierObject.get("resortID").getAsInt();
-//	    String seasonID = skierObject.get("seasonID").getAsString();
-//	    int skierID = skierObject.get("skierID").getAsInt();
-//	    int liftID = skierObject.get("liftID").getAsInt();
-//	    int time = skierObject.get("time").getAsInt();
 	    
+	    JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 	    String skierIDString  = jsonObject.keySet().iterator().next();
 	    int skierID = Integer.parseInt(skierIDString);
-	    JsonObject skierObject = jsonObject.getAsJsonObject(skierIDString); //  Watch this line
+	    
+	    
+	    JsonObject skierObject = jsonObject.getAsJsonObject(skierIDString); 
 	    int resortID = skierObject.get("resortID").getAsInt();
 	    String seasonID = skierObject.get("seasonID").getAsString();
 	    int liftID = skierObject.get("liftID").getAsInt();
 	    int time = skierObject.get("time").getAsInt();
 	    String dayID = skierObject.get("dayID").getAsString();
+	    
+	    // BASIC PARAMETER VALIDATION
+	    
+	    if (jsonObject == null || jsonObject.isEmpty()) {
+	        throw new IllegalArgumentException("The JSON object is null or empty.");
+	    }
+	    
+	    
+	    if (resortID <= 0) {
+	        throw new IllegalArgumentException("The resortID must be a positive integer.");
+	    }
+
+	    if (liftID <= 0) {
+	        throw new IllegalArgumentException("The liftID must be a positive integer.");
+	    }
+
+	    if (time <= 0) {
+	        throw new IllegalArgumentException("The time must be a positive integer.");
+	    }
+	    if (seasonID == null || seasonID.isEmpty()) {
+	        throw new IllegalArgumentException("The seasonID is null or empty.");
+	    }
+
+	    if (dayID == null || dayID.isEmpty()) {
+	        throw new IllegalArgumentException("The dayID is null or empty.");
+	    }
+
 	    
 	    Skier skier = new Skier();
 	    skier.setResortID(resortID);
@@ -128,72 +134,10 @@ public class SkiResortServlet extends HttpServlet {
 	    skier.setSkierID(skierID);
 	    skier.setLiftID(liftID);
 	    skier.setTime(time);
-	    //skierDB.put(skierIDString, skier); // line changed 
+	    skierDB.put(skierIDString, skier); // line changed 
 
-	    //***** SEND RESPONSE *****
+	    //***** SEND RESPONSE : POST METHOD *****
 	    response.setStatus(HttpServletResponse.SC_CREATED);
 	    response.getOutputStream().println("POST RESPONSE: Skier " + skierIDString + " is added to the database.");
-		
-//		int resortID = skier_object.getResortID();
-//		
-//		
-//		String seasonID = skier_object.getSeasonID();
-//		String dayID = skier_object.getDayID();
-//		
-//		int skierID = skier_object.getSkierID();
-//		
-//		
-//		//***** PARAMETER VALIDATION *****
-//		
-//		//Null or Empty Parameter
-//		if(
-//			seasonID == null || seasonID.isEmpty() ||
-//			dayID == null || dayID.isEmpty() 
-//			)
-//		{
-//			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//			response.getWriter().println("Missing Parameters");
-//			response.getWriter().println(resortID);
-//			response.getWriter().println(seasonID);
-//			response.getWriter().println(dayID);
-//			response.getWriter().println(skierID);
-//			return;
-//		}
-//		
-//		//Validation resortID since resortID is an integer in Swagger API definition
-////		int resortID;
-////		try {
-////			resortID = Integer.parseInt(resortIDString);
-////		}
-////		catch (NumberFormatException e)
-////		{
-////			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-////			response.getWriter().println("Invalid resortID");
-////			return;
-////		}
-////		
-////		//Validation resortID since resortID is an integer in Swagger API definition
-////		int skierID;
-////		try {
-////			skierID = Integer.parseInt(skierIDString);
-////		}
-////		catch (NumberFormatException e)
-////		{
-////			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-////			response.getWriter().println("Invalid skierID");
-////			return;
-////		}
-//		
-////		Skier skier_object = new Skier();
-////		skier_object.setResortID(resortID);
-////		skier_object.setSeasonID(seasonID);
-////		skier_object.setDayID(dayID);
-////		skier_object.setSkierID(skierID);
-//		
-//		skierDB.put(dayID, skier_object);
-//		
-//		//skierDB.put(dayID, skier_object);
-//		response.setStatus(HttpServletResponse.SC_CREATED);
-//		response.getOutputStream().println("POST RESPONSE: Skier " + skierID + " is added to the database.");
-	}
+	    }
 }
